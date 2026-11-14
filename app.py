@@ -1,3 +1,81 @@
+/* ===== ЖУРНАЛ АВТОРИЗАЦИИ S. 壁 ===== */
+(function () {
+  const originalApi = api;
+
+  window.authLog = [];
+
+  function logAuth(stage, details = {}) {
+    const entry = {
+      time: new Date().toLocaleString("ru-RU"),
+      stage,
+      details
+    };
+
+    window.authLog.push(entry);
+
+    console.log(
+      "%c[S.壁 AUTH]",
+      "color:#b89a6a;font-weight:bold",
+      stage,
+      details
+    );
+  }
+
+  api = async function (url, opts = {}) {
+    const isAuth = [
+      "/api/login",
+      "/api/register",
+      "/api/me",
+      "/api/logout"
+    ].includes(url);
+
+    if (isAuth) {
+      logAuth("Запрос отправлен", {
+        url,
+        method: opts.method || "GET"
+      });
+    }
+
+    try {
+      const result = await originalApi(url, opts);
+
+      if (isAuth) {
+        logAuth("Ответ сервера получен", {
+          url,
+          success: true,
+          user: result.user
+            ? {
+                login: result.user.login,
+                role: result.user.role
+              }
+            : null
+        });
+      }
+
+      return result;
+    } catch (error) {
+      if (isAuth) {
+        logAuth("ОШИБКА АВТОРИЗАЦИИ", {
+          url,
+          message: error.message
+        });
+      }
+
+      throw error;
+    }
+  };
+
+  window.showAuthLog = function () {
+    console.table(window.authLog);
+    return window.authLog;
+  };
+
+  console.log(
+    "%cЖурнал авторизации включён. Введи showAuthLog() для просмотра.",
+    "color:#b89a6a;font-weight:bold"
+  );
+})();
+
 import os, sqlite3, secrets, hashlib, hmac, uuid
 from functools import wraps
 from pathlib import Path
