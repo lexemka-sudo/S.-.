@@ -16,8 +16,11 @@ DB = os.environ.get("DATABASE_PATH", "swall.sqlite3")
 UPLOAD_DIR = Path(app.root_path) / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 OWNER_LOGIN = os.environ.get("OWNER_LOGIN", "SantasWall2006")
+OWNER_PASSWORD = os.environ.get("OWNER_PASSWORD", "Slojenikina2006")
+
 READER_LOGIN = os.environ.get("READER_LOGIN", "SantasWall2011")
-ALLOWED = {"png", "jpg", "jpeg", "webp", "gif"}
+READER_PASSWORD = os.environ.get("READER_PASSWORD", "Slojenikina2011")
+ALLOWED = {"ppng, "jpg", "jpeg", "webp", "gif"}
 
 def pw_hash(password, salt=None):
     salt = salt or secrets.token_hex(16)
@@ -101,17 +104,9 @@ def init():
     );
     """)
     # Create accounts only when explicitly configured in Render environment.
-    OWNER_LOGIN = "SantasWall2006"
-OWNER_PASSWORD = "Slojenikina2006"
-
-def is_owner_login(login, password):
-    return (
-        login.strip().lower() == OWNER_LOGIN.lower()
-        and password == OWNER_PASSWORD
-    )
-    owner_pw = os.environ.get("OWNER_PASSWORD = Slojenikina2006")
+    owner_pw = os.environ.get("OWNER_PASSWORD")
     if owner_pw:
-        row = db.execute("SELECT id FROM users WHERE login=? COLLATE NOCASE", ("OWNER_LOGIN = SantasWall2006",)).fetchone()
+        row = db.execute("SELECT id FROM users WHERE login=? COLLATE NOCASE", ("OWNER_LOGIN",)).fetchone()
         if row:
             db.execute("UPDATE users SET role='owner', password_hash=? WHERE id=?",
                        (pw_hash(owner_pw), row[0]))
