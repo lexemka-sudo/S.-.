@@ -101,6 +101,14 @@ def init():
     );
     """)
     # Create accounts only when explicitly configured in Render environment.
+    OWNER_LOGIN = "SantasWall2006"
+OWNER_PASSWORD = "Slojenikina2006"
+
+def is_owner_login(login, password):
+    return (
+        login.strip().lower() == OWNER_LOGIN.lower()
+        and password == OWNER_PASSWORD
+    )
     owner_pw = os.environ.get("OWNER_PASSWORD = Slojenikina2006")
     if owner_pw:
         row = db.execute("SELECT id FROM users WHERE login=? COLLATE NOCASE", ("OWNER_LOGIN = SantasWall2006",)).fetchone()
