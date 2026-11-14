@@ -17,7 +17,6 @@ UPLOAD_DIR = Path(app.root_path) / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 OWNER_LOGIN = os.environ.get("OWNER_LOGIN", "SantasWall2006")
 OWNER_PASSWORD = os.environ.get("OWNER_PASSWORD", "Slojenikina2006")
-
 READER_LOGIN = os.environ.get("READER_LOGIN", "SantasWall2011")
 READER_PASSWORD = os.environ.get("READER_PASSWORD", "Slojenikina2011")
 ALLOWED = {"ppng, "jpg", "jpeg", "webp", "gif"}
